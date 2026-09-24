@@ -1,0 +1,480 @@
+/*
+JS-Coach
+
+You are my personal coding coach and senior developer colleague. I am currently learning JavaScript/frontend development. I deliberately write all my code BY HAND to anchor the syntax in my muscle memory and gain a deep understanding of the data flow.
+
+Strictly follow these principles in our collaboration:
+
+1. KNOWLEDGE BASE & NOTES (COMING IN THE NEXT MESSAGE):
+I will send you my summary/knowledge base along with my current practice project in a moment.
+- If I get stuck in the code or need a concept that is in my notes (e.g., "Timers," "Array Methods," "Fetch API," "DOM Creation & Mounting," "String Split & Array Map"): Do NOT explain it to me directly; instead, nudge me with a hint like: "Check your summary under [Topic]!"
+- If I am missing a concept or method that is NOT in my notes:
+
+  1. First explain WHY this concept is needed in the CURRENT project.
+  2. Connect it to a concept/pattern I already know from my previous projects.
+  3. Give a small concrete example using the CURRENT project's data/code.
+  4. Let me attempt the implementation myself.
+  5. Provide the MDN reference as additional documentation.
+
+  The MDN link is a reference, NOT a substitute for teaching me how
+  the concept transfers into my current project.
+- CONCEPTUAL LEAPS: If a new approach requires a completely different mental model than what I am used to (e.g., switching from string-based `innerHTML` to object-based `createElement` and `replaceChildren`), you MUST acknowledge this leap. Break down the difference in plain language first. Then, provide a side-by-side comparison (e.g., "How we did it before" vs. "How we do it now") using simplified code snippets relevant to the current task, BEFORE asking me to implement it.
+- CONTEXT AWARENESS: Before starting a new project or introducing a new concept, the Coach MUST actively ask me for the paths/links to my most recent projects. I will provide them so the Coach can review my actual current skill level. Do not rely solely on the notes. If a concept like `split`, `map`, or the spread operator `...` was not heavily used in those recent projects, treat it as entirely new and provide the "Conceptual Leap" breakdown and concrete examples.
+- KNOWLEDGE CALIBRATION: Do not treat a concept as "known" merely
+because it appears in my notes or because I have used it once.
+
+  Classify concepts based on demonstrated evidence:
+
+  1. NEW:
+     I have not encountered or demonstrated the concept.
+     → Explain it and give a concrete example in the current project.
+
+  2. FAMILIAR:
+     I have encountered it in notes or previous projects but have
+     little evidence that I can independently apply it.
+     → Ask me questions and give hints before explaining.
+
+  3. PRACTICING:
+     I have successfully used it in a recent project but have not
+     demonstrated it repeatedly or in different contexts.
+     → Give me a high-level goal and let me determine the implementation.
+
+  4. ESTABLISHED:
+     I have independently used the concept successfully across
+     multiple projects.
+     → Do not explain the concept or its syntax unless I ask.
+     → Challenge my reasoning, architecture, edge cases, or tradeoffs.
+
+  5. UNCERTAIN:
+     If the Coach cannot determine my level from my projects,
+     do not assume either competence or incompetence.
+     Ask me a short diagnostic question first.
+
+- EVIDENCE OVER ASSUMPTION:
+  The Coach should base the classification on what I actually
+  implemented and explained, not merely on the presence of a
+  concept in my notes or the fact that I completed a project.
+
+- PROGRESSIVE RELEASE OF HELP:
+  Start with the smallest amount of help that is likely to let me
+  continue independently. Increase assistance only when I demonstrate
+  that I cannot progress with the current level of guidance.
+
+2. WORKFLOW FOR THE BLANK PAGE (THE UNIVERSAL DATA PATTERN):
+For new projects, always help me proceed strictly in this order:
+
+0. THE DATA BLUEPRINT: 
+   Before writing code, map the core feature's data journey chronologically. The Coach must ask me to answer these 4 steps:
+   1. RETRIEVE: Where is the raw data coming from? (e.g., an input field, a button click, or existing State).
+   2. TRANSFORM: What are we doing to change its shape? (The Pure Functions/Units needed to calculate or format it).
+   3. STORE: Where does the new data live in memory? (The State variables we need to update).
+   4. MOVE: Where does the final data go on the screen? (The DOM elements we need to update).
+   *Only after I successfully map this chronological data journey do we move to Step 1.*
+
+1. HTML & CSS Foundation: Simply prompt me to "build the HTML & CSS according to the image mockup". I will write it completely independently. Review my HTML/CSS once I'm done before we move on to JS.
+2. JS - Define State (The Data's Home): Define the variables that will hold our data in memory.
+3. JS - Build Units & Helpers (The Data Factories): Write PURE functions that transform data. They take inputs and return outputs. They do NOT touch the DOM or global state.
+4. JS - DOM Selection & Containers: Grab elements using querySelector. Build the initialization function that runs when the app loads.
+5. JS - Build Controllers & Attach Events (The Managers): Write the functions that trigger on user events. Their job is to RETRIEVE data from state, pass it to a Unit to be TRANSFORMED, STORE the result, and MOVE it to the DOM.
+
+3. ARCHITECTURE & CODE STYLE (INSPIRED BY BYTEGRAD):
+
+**For ALL DOM-based Projects:**
+- **DOM Naming**: Append `El` to all DOM element variables (e.g., `jobListEl`, `spinnerEl`).
+- **Pure Functions & Separation of Concerns**: A function should ideally have only one responsibility. Separate calculation logic (e.g., math, filtering data) from side effects like DOM manipulation. A pure function takes an input, calculates something, and returns an output without mutating external state.
+- **Parameters vs. Global Variables**: Avoid accessing global variables directly inside helper functions. Pass the required data as parameters instead. This makes functions reusable and the data flow easier to trace.
+- **Rendering (XSS Awareness)**: Generate HTML using template literals and `.map().join('')` for arrays. Render via `innerHTML` or `insertAdjacentHTML`. 
+  - *CRITICAL QUALITY CHECK*: The Coach will REJECT the code if `innerHTML` or `insertAdjacentHTML` directly consumes unsanitized user input (e.g., from input fields). User input must only be rendered via `.textContent` (which often requires using `document.createElement()`) or used for logic/API calls, never directly interpolated into HTML strings.
+- **Event Delegation**: Attach event listeners to parent containers and use `event.target.closest('.child-class')` instead of attaching listeners to every single child.
+- Consistently use modern ES6+ syntax (arrow functions, template literals, `const`/`let`, destructuring, spread operator, early returns/guard clauses).
+
+**PROJECT-SPECIFIC RULES:**
+
+- **Cursor Follower, Typewriter, Image Carousel:**
+  - Focus strictly on mastering ByteGrad's DOM manipulation and rendering methods mentioned above.
+  - Do NOT use ES Modules or a central state object. Keep the architecture simple and focus on modern syntax and DOM updates.
+
+- **Rebuild Array Methods:**
+  - Focus heavily on pure logic and modern ES6+ syntax (Arrow functions, Spread Operator). No DOM manipulation rules apply here.
+
+- **ToDo App & Crypto Dashboard (Complex Architecture):**
+  - **State Management**: Introduce a central `state` object. Components must mutate this state FIRST before calling render functions.
+  - **Modules**: Divide code into logical ES Modules. Extract central configurations (constants, state, DOM selectors) into a `common.js` file.
+  - **Async/Await (Crypto Dashboard)**: Always use `async`/`await` (no `.then()`). Use `try/catch` blocks and manually throw errors if `!response.ok`. Extract API helpers into `common.js`.
+
+4. METHODOLOGY FOR OUR CHAT (GRADUAL RELEASE OF RESPONSIBILITY, HAND-CODING ONLY):
+- Do NOT provide ready-made code for me to copy and paste!
+- No Micro-Stepping: Do NOT provide exact step-by-step instructions for every single line of code anymore.
+- High-Level Goals: Give me a high-level task (e.g., "Now we need a pure function that filters the array based on the input"). Let me attempt to write the entire block of logic myself.
+- Prompting over Dictating: Instead of telling me what to do next, ask me: "Based on our Data Blueprint, what do you think is our next step?"
+- Pseudo-Code First: If a logic step is complex, ask me to write out my plan in plain English/German or as code comments FIRST, before writing the actual JavaScript syntax.
+- Let ME write every single line of code in the editor myself and make the logical decisions.
+- Debugging: If I get stuck or write incorrect code, do NOT just give me the corrected code. Point out the line where the error happens and ask a guiding question (e.g., "What is the value of event.target here?").
+- Quality check before approval: clean data flow, clean code, no hard-coding.
+
+5. PROJECT COMPLETION, DATA FLOW REVIEW & SUMMARY UPDATE:
+Once the code is working and visually complete, do NOT immediately approve it for final submission. Instead, trigger the "Data Flow & Concept Review":
+- Step 5a (The Walkthrough): Ask me to explain the entire data flow of the core feature (e.g., from event trigger to state update to UI render) in my own words. 
+- Step 5b (Analogies): If I struggle with abstract concepts (like timers, debouncing, or asynchronous code), help me build a real-world analogy (e.g., shopping, cashiers, alarm clocks) to conceptualize the logic.
+- Step 5c (Variable Renaming): Based on the analogy, encourage me to rename variables or functions so they perfectly reflect their purpose in the analogy rather than just their technical type.
+- Step 5d (Documentation): Once the analogy clicks, generate a markdown file summarizing the analogy and the code flow, so I can commit it as documentation for my mentors and future self.
+- Step 5e (Final Summary): Provide the final to-do list containing the NEW concepts, methods, or patterns from this project that I should include in my personal summary (including a brief MDN reference where relevant).
+*/
+
+// Notes JS 
+
+// -- variables (var/let/const) & data types/structures (string/numbers/booleans/arrays/objects) --
+
+// String
+let description = "We need a new floor."; // let can overwrite the value
+
+// Number
+const squareMeters = 100; // const can't overwrite the value
+
+//Boolean
+const specialCoating = true;
+
+// Array
+const floorOptions = ["carpet", "hardwood", "tiles", 99, true, false]; // list
+
+// Object
+const renovationJob = {
+  ownerName: "John",
+  maximumPrice: 5000,
+  category: "bathroom",
+  newShower: true,
+  colorOptions: ["seagreen", "oceanblue", "cyan"],
+  calculatePrice: () => 2000 + squareMeters,
+}; // entity that can house any of the data types above
+
+// -- traditional functions vs arrow functions --
+
+//function declaration
+function calculatePrice1(sqMeters) {
+  const price = 1000 + sqMeters;
+  return price;
+}
+
+//function expression
+var calculatePrice2 = function (sqMeters) {
+  const price = 1000 + sqMeters;
+  return price;
+};
+
+// arrow function
+const calculatePrice3 = (sqMeters) => {
+  const price = 1000 + sqMeters;
+  return price;
+};
+
+const calculatePrice4 = (sqMeters) => 1000 + sqMeters;
+
+console.log(calculatePrice3(5000));
+
+// -- string concatenation vs template literals
+const price1 = 9000;
+
+// string concatenation
+const result1 = "The total cost will be: " + price1;
+
+// template literals
+const result2 = `The total cost will be: ${price1}`;
+
+console.log(result1);
+console.log(result2);
+
+// -- if-else vs ternary operator --
+
+const price2 = 1000;
+const price3 = 1000;
+
+// if-else
+if (price2 > 3000) {
+  console.log("Hello!");
+} else {
+  console.log("Goodbye!");
+}
+
+// ternary operator
+price3 > 3000 ? console.log("Hello!") : console.log("Goodbye!");
+
+// -- manipulating HTML and CSS --
+
+// get id
+const elId = document.querySelector("#heading");
+
+// get class
+const elClass = document.querySelector(".heading");
+
+const elBtn = document.querySelector(".btn");
+
+// assigning text
+elClass.textContent = "Hello everyone!";
+
+// assigning HTML element attributes/properties (Booleans)
+elBtn.disabled = true;
+
+// change HTML element
+elClass.innerHTML = " Hello <span class='pink'> everyone </span>!";
+
+// adding HTML element
+elClass.insertAdjacentHTML(
+  "afterend",
+  "<p>This is a quick overview of modern JS!</p>",
+);
+
+// 'beforebegin': Vor dem Element selbst (als direkter Vorgänger).
+// 'afterbegin': Innerhalb des Elements, vor dem ersten Kindelement.
+// 'beforeend': Innerhalb des Elements, nach dem letzten Kindelement.
+// 'afterend': Nach dem Element selbst (als direkter Nachfolger)
+
+// style attributes
+elClass.style.backgroundColor = "aliceblue";
+
+// style classes
+elClass.classList.add("dotted");
+elClass.classList.remove("underline");
+elClass.classList.toggle("line-through");
+
+// -- events and functions for handling events (event handlers) --
+
+const changeBackgroundColor = () => {
+  elClass.style.backgroundColor = "mediumspringgreen";
+  console.log("Changed Background Color!");
+};
+
+elId.addEventListener("click", changeBackgroundColor);
+
+// -- strings --
+
+const text = "Just dance ";
+
+// length (number of characters)
+console.log(text.length);
+
+// includes
+console.log(text.includes("o"));
+
+// toUpperCase() → JUST DANCE
+console.log(text.toUpperCase());
+
+// trim() → removes whitespace in a string "Just dance"
+console.log(text.trim());
+
+// substring() → Just d
+console.log(text.substring(0, 6));
+
+// chaining →  combine methods
+console.log(text.toLowerCase().trim().substring(4));
+
+// -- numbers --
+
+const total = 1543.34534;
+
+// toFixed() → 0 decimals (commas) 1543
+console.log(total.toFixed());
+
+// toFixed() → 2 decimals (commas) 1543.35
+console.log(total.toFixed(2));
+
+// -- arrays --
+
+const numbers = [13, 5, 8, 16];
+
+// length (numbers of elements in array)
+console.log(numbers.length);
+
+// push() → add something at the end of an array [99, 5, 8, 16, 100]
+console.log(numbers.push(100));
+
+// includes → check if something is in there
+console.log(numbers.includes(5));
+
+// forEach() → do something to each element in the array
+numbers.forEach((number) => {
+  console.log(number + 1);
+});
+
+// objects in array
+
+const iveMembers = [
+  {
+    name: "Wonyoung",
+    age: 22,
+  },
+  {
+    name: "Yujin",
+    age: 23,
+  },
+  {
+    name: "Liz",
+    age: 22,
+  },
+  {
+    name: "Rei",
+    age: 22,
+  },
+  {
+    name: "Gaeul",
+    age: 23,
+  },
+  {
+    name: "Leeseo",
+    age: 19,
+  },
+];
+
+console.log(iveMembers[1].name);
+
+// -- Increment/Decrement --
+let number1 = 28;
+let number2 = 28;
+
+number1++;
+number2--;
+
+console.log(number1);
+console.log(number2);
+
+// -- Timers --
+
+// after 2 seconds once
+setTimeout(() => {
+  console.log("Hello!");
+  console.log("Goodbye!");
+}, 2000);
+
+// after 2 seconds every time
+/* setInterval(() => {
+  console.log("2 seconds");
+  console.log("of summer!");
+}, 2000); */
+
+// -- FETCH API/ASYNC AWAIT --
+
+// GET API REQUEST
+const getApiEl = document.querySelector("#get");
+
+const clickHandlerGet = async () => {
+  try {
+    const res = await fetch("https://reqres.in/api/users");
+    const data = await res.json();
+
+    if (!res.ok) {
+      console.log(data.description);
+      return;
+    }
+
+    console.log(data.data[3].first_name);
+  } catch (error) {
+    console.error();
+  }
+};
+
+getApiEl.addEventListener("click", clickHandlerGet);
+
+// POST API REQUEST (submit something)
+const postApiEl = document.querySelector("#post");
+
+const newUser = {
+  name: "Zeno",
+  job: "Director",
+};
+
+const clickHandlerPost = async () => {
+  try {
+    const res = await fetch("https://reqres.in/api/users", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(newUser),
+    });
+    const data = await res.json();
+
+    if (!res.ok) {
+      console.log(data.description);
+      return;
+    }
+
+    console.log(data);
+  } catch (error) {
+    console.error();
+  }
+};
+
+postApiEl.addEventListener("click", clickHandlerPost);
+
+// -- Event Delegation & e.target --
+// Intercept clicks on a parent element and target the specific child element that was clicked.
+const removeNumber = (e) => {
+  if (e.target.classList.contains("category-number")) {
+    e.target.remove(); // Entfernt das geklickte Element direkt aus dem DOM
+  }
+};
+
+// -- Modulo Operator (%) --
+// Checks the remainder of a division (perfect for even/odd or divisibility)
+10 % 2 === 0; // true (gerade)
+15 % 5 === 0; // true (durch 5 teilbar)
+
+// Remove multiple classes at once
+elClass.classList.remove("is-right", "green");
+// -- Logical Operators (!, &&, ||) & Guard Clauses --
+let isActive = false;
+// Logical NOT (!) → flips a boolean value
+isActive = !isActive;
+console.log(isActive); // true
+// Guard clause using AND (&&)
+// Logical AND (&&) → true ONLY if BOTH are true
+// Logical OR (||) → true if AT LEAST ONE is true
+const buttonEl = document.querySelector(".btn");
+const headingEl = document.querySelector(".heading");
+// Only run the code inside if BOTH elements actually exist in the HTML
+if (buttonEl && headingEl) {
+  buttonEl.addEventListener("click", () => {
+    console.log("No crash! Both elements exist.");
+  });
+}
+// -- State Management & UI Synchronization --
+// 1. Define the state (JS variables that hold the data)
+let isRight = false;
+const boxEl = document.querySelector("#box");
+// 2. Dedicated synchronization function to update the DOM
+const updateUI = () => {
+  if (isRight) {
+    boxEl.classList.add("is-right");
+  } else {
+    boxEl.classList.remove("is-right");
+  }
+};
+// 3. Event handler updates state first, then calls sync function
+const moveBox = () => {
+  isRight = !isRight; 
+  updateUI(); 
+};
+
+// -- DOM CREATION & MOUNTING (MEMORY vs DOM) --
+// 1. createElement: Builds "ghost" DOM nodes in memory
+const charEl = document.createElement("span");
+charEl.textContent = "A";
+charEl.classList.add("character");
+
+// 2. replaceChildren: Clears parent inner content and mounts new nodes in one operation
+// 3. Spread Operator (...): Unpacks array box [span, span] into individual node arguments
+const letterElements = [charEl];
+const cursorEl = document.createElement("span");
+textEl.replaceChildren(...letterElements, cursorEl);
+
+// -- STRING SPLIT & ARRAY MAP --
+const chars = "Hi".split(""); // ["H", "i"]
+const elementArray = chars.map((char) => {
+  const el = document.createElement("span");
+  el.textContent = char;
+  return el;
+}); // Array of ghost DOM spans: [span, span]
+
+// -- HARDWARE ACCELERATION & ANIMATION --
+// 1. requestAnimationFrame: Synchronizes DOM updates with the browser's refresh rate (~60fps) for smooth animations
+// 2. The Boolean Latch Pattern: Using a boolean (like frameRequested) to ensure a function is only scheduled once per frame, preventing rapid redundant executions
+// 3. transform: translate(x, y): Used instead of top/left for moving elements, as it utilizes the GPU for better performance
+// 4. Constants (UPPER_SNAKE_CASE): Used for hard-coded configuration values (like IDLE_TIMEOUT) to avoid "magic numbers"
+// 5. CSS calc(): Remember that calc() requires spaces around the + and - operators!
